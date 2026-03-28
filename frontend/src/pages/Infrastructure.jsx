@@ -37,6 +37,15 @@ function Infrastructure() {
       description: 'Manages secure, short-lived access credentials. Ensures the EC2 instance can strictly only read/write to the designated S3 bucket and DynamoDB table.',
       color: '#DD344C', // AWS Security Color
       details: ['Temporary Credentials', 'Least Privilege Policies', 'Role-Based Access', 'API Key Protection']
+    },
+    {
+      id: 'sns',
+      name: 'Amazon SNS',
+      icon: '✉️',
+      role: 'Push Notifications',
+      description: 'Provides event-driven messaging. Automatically triggers and delivers branded email notifications to the user the moment an accessibility scan completes.',
+      color: '#FF4F8B', // AWS App Integration Pink
+      details: ['Pub/Sub Messaging', 'Email Delivery', 'Event-Driven', 'Asynchronous Workloads']
     }
   ];
 
@@ -108,6 +117,18 @@ function Infrastructure() {
                 <span>S3 Bucket</span>
               </div>
             </div>
+          </div>
+          
+          {/* New Event-Driven Flow for SNS */}
+          <div className="diagram-arrow down-long">↓</div>
+          <div className="diagram-node sns-node">
+            <span className="node-icon">✉️</span>
+            <span>Amazon SNS</span>
+          </div>
+          <div className="diagram-arrow down-short">↓</div>
+          <div className="diagram-node user-email-node">
+            <span className="node-icon">📧</span>
+            <span>User Inbox</span>
           </div>
         </div>
       </div>

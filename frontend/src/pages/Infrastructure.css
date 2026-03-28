@@ -230,6 +230,24 @@
 .db-node:hover { border-color: #4053D6; }
 .s3-node:hover { border-color: #569A31; }
 .ai-node:hover { border-color: #F55036; }
+.sns-node:hover { border-color: #FF4F8B; }
+.user-email-node {
+  background: var(--bg-surface);
+  border-style: dashed;
+}
+.user-email-node:hover { border-color: #00C7B7; }
+
+/* Arrows */
+.down-long {
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+.down-short {
+  height: 20px;
+  display: flex;
+  align-items: center;
+}
 
 @media (max-width: 900px) {
   .diagram-split {
