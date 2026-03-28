@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import NewScanModal from './components/NewScanModal';
 import Dashboard from './pages/Dashboard';
+import Infrastructure from './pages/Infrastructure';
 import { startScan, getScanById } from './api/client';
 import './App.css';
 
@@ -12,6 +13,7 @@ function App() {
   const [isScanning, setIsScanning] = useState(false);
   const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [currentTab, setCurrentTab] = useState('dashboard');
 
   const handleNewScan = () => {
     setShowModal(true);
@@ -45,6 +47,7 @@ function App() {
     try {
       const data = await getScanById(scanId);
       setCurrentScan(data);
+      setCurrentTab('dashboard');
       setSidebarOpen(false);
     } catch (err) {
       console.error('Failed to load scan:', err);
@@ -67,13 +70,19 @@ function App() {
         onNewScan={handleNewScan}
         scanHistory={scanHistory}
         setScanHistory={setScanHistory}
+        currentTab={currentTab}
+        setCurrentTab={setCurrentTab}
       />
 
       <main className="app-main">
-        <Dashboard
-          scanData={currentScan}
-          onNewScan={handleNewScan}
-        />
+        {currentTab === 'infrastructure' ? (
+          <Infrastructure />
+        ) : (
+          <Dashboard
+            scanData={currentScan}
+            onNewScan={handleNewScan}
+          />
+        )}
       </main>
 
       <NewScanModal

@@ -1,0 +1,247 @@
+.infrastructure-page {
+  margin-left: 280px;
+  min-height: 100vh;
+  padding: 40px;
+  max-width: 1200px;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.infra-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.infra-header-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+}
+
+.infra-header h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 12px;
+}
+
+.infra-header p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* 3D Flip Cards Grid */
+.infra-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.infra-card {
+  perspective: 1000px;
+  height: 320px;
+}
+
+.infra-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+}
+
+.infra-card:hover .infra-card-inner {
+  transform: rotateY(180deg);
+}
+
+.infra-card-front, .infra-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: var(--radius-md);
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+}
+
+.infra-card-front {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-top: 4px solid var(--service-color);
+}
+
+.infra-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin-bottom: 16px;
+}
+
+.infra-card-front h3 {
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.infra-role {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--service-color);
+  margin-bottom: 16px;
+}
+
+.infra-card-front p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  flex-grow: 1;
+}
+
+.infra-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 16px;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.infra-card-back {
+  background: var(--service-color);
+  color: white;
+  transform: rotateY(180deg);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.infra-card-back h3 {
+  font-size: 1.4rem;
+  margin-bottom: 24px;
+  color: white;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  padding-bottom: 8px;
+}
+
+.infra-details-list {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.infra-details-list li {
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+  padding-left: 10px;
+  position: relative;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* System Flow Diagram */
+.infra-diagram {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.diagram-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 40px;
+}
+
+.diagram-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.diagram-node {
+  background: white;
+  border: 2px solid var(--border-medium);
+  padding: 16px 24px;
+  border-radius: 30px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  z-index: 2;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.diagram-node:hover {
+  transform: scale(1.05);
+  border-color: var(--primary);
+}
+
+.node-icon {
+  font-size: 1.2rem;
+}
+
+.diagram-arrow {
+  font-size: 24px;
+  color: var(--border-primary);
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.diagram-split {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  margin-top: 10px;
+}
+
+.split-branch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.down-right { transform: rotate(-30deg) translateY(10px); }
+.down-left { transform: rotate(30deg) translateY(10px); }
+
+/* Node Specific Colors on Hover */
+.user-node:hover { border-color: #00C7B7; }
+.ec2-node:hover { border-color: #FF9900; }
+.db-node:hover { border-color: #4053D6; }
+.s3-node:hover { border-color: #569A31; }
+.ai-node:hover { border-color: #F55036; }
+
+@media (max-width: 900px) {
+  .diagram-split {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .down-right, .down-left { transform: none; }
+}
+
+@media (max-width: 768px) {
+  .infrastructure-page {
+    margin-left: 0;
+    padding: 20px;
+  }
+}

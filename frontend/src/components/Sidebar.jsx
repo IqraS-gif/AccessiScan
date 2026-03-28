@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { getScanHistory } from '../api/client';
 import './Sidebar.css';
 
-function Sidebar({ onSelectScan, activeScanId, onNewScan, scanHistory, setScanHistory }) {
+function Sidebar({ onSelectScan, activeScanId, onNewScan, scanHistory, setScanHistory, currentTab, setCurrentTab }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -51,9 +51,26 @@ function Sidebar({ onSelectScan, activeScanId, onNewScan, scanHistory, setScanHi
           <div className="sidebar-logo-icon">🔍</div>
           <h1>AccessiScan</h1>
         </div>
-        <button className="new-scan-btn" onClick={onNewScan}>
+        <button className="new-scan-btn" onClick={() => { setCurrentTab('dashboard'); onNewScan(); }}>
           <span>⚡</span> New Scan
         </button>
+      </div>
+
+      <div className="sidebar-nav">
+        <div 
+          className={`sidebar-nav-item ${currentTab === 'dashboard' ? 'active' : ''}`}
+          onClick={() => setCurrentTab('dashboard')}
+        >
+          <span className="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </div>
+        <div 
+          className={`sidebar-nav-item ${currentTab === 'infrastructure' ? 'active' : ''}`}
+          onClick={() => setCurrentTab('infrastructure')}
+        >
+          <span className="nav-icon">☁️</span>
+          <span>Cloud Architecture</span>
+        </div>
       </div>
 
       <div className="sidebar-history">
