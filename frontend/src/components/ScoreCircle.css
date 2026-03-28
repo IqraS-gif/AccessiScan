@@ -1,0 +1,77 @@
+.score-circle-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.score-circle-wrapper {
+  position: relative;
+  width: 180px;
+  height: 180px;
+}
+
+.score-circle-svg {
+  transform: rotate(-90deg);
+  width: 180px;
+  height: 180px;
+  filter: drop-shadow(0 0 15px var(--glow-color, rgba(179, 43, 72, 0.3)));
+}
+
+.score-circle-bg {
+  fill: none;
+  stroke: rgba(179, 43, 72, 0.08);
+  stroke-width: 10;
+}
+
+.score-circle-progress {
+  fill: none;
+  stroke-width: 10;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.score-circle-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.score-circle-number {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+.score-circle-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-top: 4px;
+}
+
+.score-circle-status {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 4px 16px;
+  border-radius: 20px;
+}
+
+.score-circle-status.good {
+  background: rgba(46, 213, 115, 0.12);
+  color: var(--score-good);
+}
+
+.score-circle-status.moderate {
+  background: rgba(255, 192, 72, 0.12);
+  color: var(--score-moderate);
+}
+
+.score-circle-status.poor {
+  background: rgba(255, 71, 87, 0.12);
+  color: var(--score-poor);
+}
