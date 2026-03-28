@@ -86,21 +86,58 @@ Return ONLY the JSON object. No preamble, no postscript."""
             
             if start_idx != -1 and end_idx != -1:
                 json_str = content[start_idx:end_idx+1]
-                # Replace literal newlines inside strings if they exist (common LLM error)
-                # This is a bit risky but can help
-                # json_str = json_str.replace('\n', '\\n') # This would break if we have proper indentation
             else:
                 json_str = content
 
+            # Try parsing, with increasingly aggressive fixups
+            analysis = None
+            
+            # Attempt 1: Direct parse
             try:
                 analysis = json.loads(json_str)
             except json.JSONDecodeError:
-                # Fallback: remove markdown block markers if present
-                if "```json" in content:
-                    json_str = content.split("```json")[1].split("```")[0]
-                elif "```" in content:
-                    json_str = content.split("```")[1].split("```")[0]
-                analysis = json.loads(json_str.strip())
+                pass
+            
+            # Attempt 2: Fix literal newlines inside JSON string values
+            if analysis is None:
+                try:
+                    import re
+                    # Replace literal newlines that are inside JSON string values
+                    fixed = re.sub(r'(?<=": ")(.*?)(?="[,\s*}])', 
+                                   lambda m: m.group(0).replace('\n', '\\n'), 
+                                   json_str, flags=re.DOTALL)
+                    analysis = json.loads(fixed)
+                except (json.JSONDecodeError, Exception):
+                    pass
+            
+            # Attempt 3: Use ast.literal_eval as last resort
+            if analysis is None:
+                try:
+                    # Replace problematic characters and try again
+                    cleaned = json_str.replace('\n', ' ').replace('\r', ' ')
+                    # Collapse multiple spaces
+                    cleaned = re.sub(r'\s+', ' ', cleaned)
+                    analysis = json.loads(cleaned)
+                except (json.JSONDecodeError, Exception):
+                    pass
+            
+            # Attempt 4: Extract fields individually with regex
+            if analysis is None:
+                try:
+                    overview = re.search(r'"overview"\s*:\s*"(.*?)"(?=\s*,\s*")', json_str, re.DOTALL)
+                    impact = re.search(r'"human_impact"\s*:\s*"(.*?)"(?=\s*,\s*")', json_str, re.DOTALL)
+                    remediation = re.search(r'"remediation_strategy"\s*:\s*"(.*?)"(?=\s*})', json_str, re.DOTALL)
+                    analysis = {
+                        "overview": overview.group(1) if overview else "Analysis parsed partially.",
+                        "human_impact": impact.group(1) if impact else "",
+                        "remediation_strategy": remediation.group(1) if remediation else "",
+                    }
+                except Exception:
+                    analysis = {
+                        "overview": "AI analysis returned content but it could not be parsed.",
+                        "human_impact": "",
+                        "remediation_strategy": "",
+                    }
 
             return {
                 "overview": analysis.get("overview", "Analysis received but failed to parse fully."),
