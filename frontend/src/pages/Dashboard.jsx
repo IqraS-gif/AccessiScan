@@ -3,6 +3,7 @@ import ScoreCircle from '../components/ScoreCircle';
 import PourBars from '../components/PourBars';
 import ViolationList from '../components/ViolationList';
 import ReportSection from '../components/ReportSection';
+import MarkdownText from '../components/MarkdownText';
 import './Dashboard.css';
 
 function Dashboard({ scanData, onNewScan }) {
@@ -86,7 +87,7 @@ function Dashboard({ scanData, onNewScan }) {
       {/* AI Analysis Overview */}
       {scanData.ai_analysis?.overview && (
         <ReportSection icon="🤖" title="Analysis Overview">
-          <div className="ai-text">{scanData.ai_analysis.overview}</div>
+          <MarkdownText content={scanData.ai_analysis.overview} />
         </ReportSection>
       )}
 
@@ -107,14 +108,14 @@ function Dashboard({ scanData, onNewScan }) {
       {/* Human Impact */}
       {scanData.ai_analysis?.human_impact && (
         <ReportSection icon="♿" title="Human Impact Dynamics">
-          <div className="ai-text">{scanData.ai_analysis.human_impact}</div>
+          <MarkdownText content={scanData.ai_analysis.human_impact} />
         </ReportSection>
       )}
 
       {/* Remediation Strategy */}
       {scanData.ai_analysis?.remediation_strategy && (
         <ReportSection icon="🔧" title="Remediation Strategy">
-          <div className="ai-text">{scanData.ai_analysis.remediation_strategy}</div>
+          <MarkdownText content={scanData.ai_analysis.remediation_strategy} />
         </ReportSection>
       )}
     </div>

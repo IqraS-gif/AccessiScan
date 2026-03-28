@@ -1,0 +1,127 @@
+.markdown-text {
+  line-height: 1.8;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* Headings */
+.md-heading {
+  color: var(--text-primary);
+  font-weight: 700;
+  margin: 20px 0 10px 0;
+  font-size: 1.05rem;
+  padding-bottom: 6px;
+  border-bottom: 2px solid rgba(179, 43, 72, 0.15);
+}
+
+.md-heading-lg {
+  font-size: 1.2rem;
+  border-bottom: 2px solid rgba(179, 43, 72, 0.25);
+}
+
+.md-heading-sm {
+  font-size: 0.95rem;
+  border-bottom: 1px solid rgba(179, 43, 72, 0.1);
+}
+
+.md-heading:first-child {
+  margin-top: 0;
+}
+
+/* Paragraphs */
+.md-paragraph {
+  margin: 8px 0;
+  line-height: 1.8;
+}
+
+/* Spacer (empty lines) */
+.md-spacer {
+  height: 8px;
+}
+
+/* Bullet list */
+.md-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 6px 0 6px 4px;
+  line-height: 1.7;
+}
+
+.md-bullet {
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 1rem;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+/* Numbered list */
+.md-list-number {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Code blocks */
+.md-code-block {
+  margin: 16px 0;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border-medium);
+  background: #1e1e2e;
+}
+
+.md-code-lang {
+  background: #2d2d3f;
+  color: #a0a0c0;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 6px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.md-code-block pre {
+  margin: 0;
+  padding: 16px;
+  overflow-x: auto;
+  background: transparent;
+  border: none;
+}
+
+.md-code-block code {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: #e0e0f0;
+  background: transparent;
+  padding: 0;
+}
+
+/* Inline code */
+.md-inline-code {
+  background: rgba(179, 43, 72, 0.08);
+  color: var(--primary);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.82rem;
+  border: 1px solid rgba(179, 43, 72, 0.1);
+}
+
+/* Bold */
+.markdown-text strong {
+  color: var(--text-primary);
+  font-weight: 700;
+}
