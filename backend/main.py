@@ -4,7 +4,7 @@ import json
 from datetime import datetime, timezone
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, FileResponse
 from dotenv import load_dotenv
@@ -17,6 +17,7 @@ from ai.groq_analysis import generate_ai_analysis
 from storage.s3 import upload_screenshot, upload_report, get_presigned_url, upload_pdf
 from storage.dynamo import put_scan, get_scan, list_scans
 from reports.pdf_export import generate_pdf_report
+from auth.dependencies import get_current_user, get_optional_user, CognitoUser
 
 # In-memory cache for scans (fallback when AWS is unavailable)
 scan_cache: dict[str, dict] = {}
@@ -56,11 +57,22 @@ async def root():
     return {"message": "AccessiScan API is running", "version": "1.0.0"}
 
 
+@app.get("/api/me")
+async def get_me(current_user: CognitoUser = Depends(get_current_user)):
+    """Get the authenticated user's profile info."""
+    return {
+        "user_id": current_user.user_id,
+        "email": current_user.email,
+        "username": current_user.username,
+    }
+
+
 @app.post("/api/scan")
-async def create_scan(request: ScanRequest):
-    """Run a full accessibility scan on the given URL."""
+async def create_scan(request: ScanRequest, current_user: CognitoUser = Depends(get_current_user)):
+    """Run a full accessibility scan on the given URL. Requires authentication."""
     scan_id = str(uuid.uuid4())
-    user_id = request.user_id
+    # Use the authenticated user's Cognito sub as user_id
+    user_id = current_user.user_id
     created_at = datetime.now(timezone.utc).isoformat()
 
     # 1. Run Playwright + axe-core scan
@@ -126,8 +138,10 @@ async def create_scan(request: ScanRequest):
 
 
 @app.get("/api/scans")
-async def get_scans(user_id: str = None):
-    """List all scan history."""
+async def get_scans(current_user: CognitoUser = Depends(get_current_user)):
+    """List scan history for the authenticated user."""
+    user_id = current_user.user_id
+
     # Try DynamoDB first
     scans = list_scans(user_id)
     if scans:
@@ -136,7 +150,7 @@ async def get_scans(user_id: str = None):
     # Fallback to local cache
     summaries = []
     for sid, data in scan_cache.items():
-        if user_id and data.get("user_id") != user_id:
+        if data.get("user_id") != user_id:
             continue
         summaries.append({
             "scan_id": data["scan_id"],
@@ -151,8 +165,8 @@ async def get_scans(user_id: str = None):
 
 
 @app.get("/api/scan/{scan_id}")
-async def get_scan_by_id(scan_id: str):
-    """Get a full scan report."""
+async def get_scan_by_id(scan_id: str, current_user: CognitoUser = Depends(get_current_user)):
+    """Get a full scan report. Requires authentication."""
     # Try DynamoDB first
     item = get_scan(scan_id)
     if item:
@@ -179,8 +193,8 @@ async def get_scan_by_id(scan_id: str):
 
 
 @app.get("/api/scan/{scan_id}/screenshot")
-async def get_screenshot(scan_id: str):
-    """Get the screenshot for a scan."""
+async def get_screenshot(scan_id: str, current_user: CognitoUser = Depends(get_current_user)):
+    """Get the screenshot for a scan. Requires authentication."""
     # Try local file first
     screenshot_path = os.path.join(
         os.path.dirname(__file__), "screenshots", f"{scan_id}.png"
@@ -198,8 +212,8 @@ async def get_screenshot(scan_id: str):
 
 
 @app.get("/api/scan/{scan_id}/pdf")
-async def get_pdf_report(scan_id: str):
-    """Generate and return a PDF report."""
+async def get_pdf_report(scan_id: str, current_user: CognitoUser = Depends(get_current_user)):
+    """Generate and return a PDF report. Requires authentication."""
     # Get scan data
     scan_data = scan_cache.get(scan_id)
     if not scan_data:

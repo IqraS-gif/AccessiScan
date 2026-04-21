@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { getScanHistory } from '../api/client';
 import './Sidebar.css';
 
-function Sidebar({ onSelectScan, activeScanId, onNewScan, scanHistory, setScanHistory, currentTab, setCurrentTab }) {
+function Sidebar({ onSelectScan, activeScanId, onNewScan, scanHistory, setScanHistory, currentTab, setCurrentTab, user, onLogout }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -43,6 +43,9 @@ function Sidebar({ onSelectScan, activeScanId, onNewScan, scanHistory, setScanHi
       return dateStr;
     }
   };
+
+  const userEmail = user?.profile?.email || 'User';
+  const userInitial = userEmail.charAt(0).toUpperCase();
 
   return (
     <aside className="sidebar">
@@ -105,6 +108,20 @@ function Sidebar({ onSelectScan, activeScanId, onNewScan, scanHistory, setScanHi
             </div>
           </div>
         ))}
+      </div>
+
+      {/* User Profile Section */}
+      <div className="sidebar-user">
+        <div className="sidebar-user-info">
+          <div className="sidebar-user-avatar">{userInitial}</div>
+          <div className="sidebar-user-details">
+            <div className="sidebar-user-email" title={userEmail}>{userEmail}</div>
+            <div className="sidebar-user-tag">🔐 Cognito IAM</div>
+          </div>
+        </div>
+        <button className="sidebar-logout-btn" onClick={onLogout} title="Sign out">
+          ⏻
+        </button>
       </div>
     </aside>
   );

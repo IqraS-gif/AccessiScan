@@ -5,7 +5,7 @@ from datetime import datetime
 
 class ScanRequest(BaseModel):
     url: str
-    user_id: str = "default_user"
+    user_id: str = "default_user"  # Kept for backwards compatibility; overridden by JWT sub
 
 
 class ViolationNode(BaseModel):

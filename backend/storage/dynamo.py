@@ -12,17 +12,30 @@ AWS_REGION = os.getenv("AWS_DEFAULT_REGION", "us-east-1")
 
 
 def get_dynamo_resource():
-    """Get a DynamoDB resource."""
+    """Get a DynamoDB resource. Supports IAM Roles and Environment Variables."""
     try:
-        session = boto3.Session(
-            aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-            aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
-            aws_session_token=os.getenv("AWS_SESSION_TOKEN"),
-            region_name=AWS_REGION,
-        )
-        return session.resource("dynamodb")
-    except Exception:
+        # Check if we have explicit credentials in .env
+        access_key = os.getenv("AWS_ACCESS_KEY_ID")
+        secret_key = os.getenv("AWS_SECRET_ACCESS_KEY")
+        session_token = os.getenv("AWS_SESSION_TOKEN")
+
+        if access_key and secret_key:
+            print("Using explicit AWS credentials from environment")
+            session = boto3.Session(
+                aws_access_key_id=access_key,
+                aws_secret_access_key=secret_key,
+                aws_session_token=session_token,
+                region_name=AWS_REGION,
+            )
+            return session.resource("dynamodb")
+        else:
+            print("No explicit AWS credentials found, attempting to use IAM Role/Default Chain")
+            # Default to the environment's IAM role or local AWS config
+            return boto3.resource("dynamodb", region_name=AWS_REGION)
+    except Exception as e:
+        print(f"❌ Failed to initialize DynamoDB resource: {e}")
         return None
+
 
 
 def _convert_floats(obj):

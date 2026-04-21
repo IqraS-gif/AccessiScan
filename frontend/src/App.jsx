@@ -1,12 +1,15 @@
 import { useState } from 'react';
+import { useAuth } from 'react-oidc-context';
 import Sidebar from './components/Sidebar';
 import NewScanModal from './components/NewScanModal';
 import Dashboard from './pages/Dashboard';
 import Infrastructure from './pages/Infrastructure';
+import LoginPage from './pages/LoginPage';
 import { startScan, getScanById } from './api/client';
 import './App.css';
 
 function App() {
+  const auth = useAuth();
   const [currentScan, setCurrentScan] = useState(null);
   const [scanHistory, setScanHistory] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -14,6 +17,11 @@ function App() {
   const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentTab, setCurrentTab] = useState('dashboard');
+
+  // Show login page if not authenticated
+  if (!auth.isAuthenticated) {
+    return <LoginPage />;
+  }
 
   const handleNewScan = () => {
     setShowModal(true);
@@ -23,7 +31,7 @@ function App() {
     setIsScanning(true);
     setError(null);
     try {
-      const result = await startScan(url);
+      const result = await startScan(url, auth.user?.profile?.sub || 'default_user');
       setCurrentScan(result);
       // Add to history
       setScanHistory(prev => [{
@@ -72,6 +80,8 @@ function App() {
         setScanHistory={setScanHistory}
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
+        user={auth.user}
+        onLogout={() => auth.removeUser()}
       />
 
       <main className="app-main">
