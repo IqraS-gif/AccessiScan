@@ -16,6 +16,16 @@ WHITE = HexColor("#ffffff")
 GRAY = HexColor("#666666")
 
 
+def _clean_text(text: str) -> str:
+    """Escape HTML and handle newlines for ReportLab Paragraphs."""
+    if not text:
+        return ""
+    # Escape standard HTML markers that crash ReportLab
+    text = str(text).replace("<", "&lt;").replace(">", "&gt;")
+    # Convert newlines to breaks to preserve formatting
+    return text.replace("\n", "<br/>")
+
+
 def generate_pdf_report(scan_data: dict) -> bytes:
     """Generate a professional PDF accessibility report."""
     buffer = io.BytesIO()
@@ -133,17 +143,17 @@ def generate_pdf_report(scan_data: dict) -> bytes:
     if ai and ai.get("overview"):
         elements.append(PageBreak())
         elements.append(Paragraph("AI Analysis Overview", heading_style))
-        elements.append(Paragraph(ai.get("overview", ""), body_style))
+        elements.append(Paragraph(_clean_text(ai.get("overview", "")), body_style))
         elements.append(Spacer(1, 10))
 
         if ai.get("human_impact"):
             elements.append(Paragraph("Human Impact", heading_style))
-            elements.append(Paragraph(ai.get("human_impact", ""), body_style))
+            elements.append(Paragraph(_clean_text(ai.get("human_impact", "")), body_style))
             elements.append(Spacer(1, 10))
 
         if ai.get("remediation_strategy"):
             elements.append(Paragraph("Remediation Strategy", heading_style))
-            elements.append(Paragraph(ai.get("remediation_strategy", ""), body_style))
+            elements.append(Paragraph(_clean_text(ai.get("remediation_strategy", "")), body_style))
 
     doc.build(elements)
     return buffer.getvalue()
