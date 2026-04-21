@@ -18,6 +18,7 @@ from storage.s3 import upload_screenshot, upload_report, get_presigned_url, uplo
 from storage.dynamo import put_scan, get_scan, list_scans
 from reports.pdf_export import generate_pdf_report
 from auth.dependencies import get_current_user, get_optional_user, CognitoUser
+from notifications.sns import send_scan_notification
 
 # In-memory cache for scans (fallback when AWS is unavailable)
 scan_cache: dict[str, dict] = {}
@@ -133,6 +134,9 @@ async def create_scan(request: ScanRequest, current_user: CognitoUser = Depends(
 
     # 7. Always cache locally as fallback
     scan_cache[scan_id] = result
+
+    # 8. Send SNS Notification
+    send_scan_notification(result)
 
     return result
 
