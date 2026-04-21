@@ -9,54 +9,8 @@ const api = axios.create({
   },
 });
 
-// ─── Axios Request Interceptor ───
-// Automatically attaches the Cognito JWT token to every API request
-api.interceptors.request.use(
-  (config) => {
-    // Search for the OIDC user token in sessionStorage (key starts with 'oidc.user:')
-    let token = null;
-    for (let i = 0; i < sessionStorage.length; i++) {
-      const key = sessionStorage.key(i);
-      if (key && key.startsWith('oidc.user:')) {
-        const oidcStorage = sessionStorage.getItem(key);
-        if (oidcStorage) {
-          const user = JSON.parse(oidcStorage);
-          if (user?.id_token) {
-            token = user.id_token;
-            break;
-          }
-        }
-      }
-    }
-
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-// ─── Axios Response Interceptor ───
-// Redirects to login on 401 Unauthorized
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      console.warn('🔒 Unauthorized — token may be expired.');
-      // Clear all stored OIDC users and reload to trigger login
-      for (let i = 0; i < sessionStorage.length; i++) {
-        const key = sessionStorage.key(i);
-        if (key && key.startsWith('oidc.user:')) {
-          sessionStorage.removeItem(key);
-        }
-      }
-      window.location.reload();
-    }
-    return Promise.reject(error);
-  }
-);
+// ─── Token Integration Removed (Auth Bypass) ───
+// Request and response interceptors have been disabled to allow anonymous access.
 
 export const startScan = async (url, userId = 'default_user') => {
   const response = await api.post('/api/scan', { url, user_id: userId });

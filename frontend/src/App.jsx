@@ -18,10 +18,11 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentTab, setCurrentTab] = useState('dashboard');
 
-  // Show login page if not authenticated
+  /* BYPASSED AUTH CHECK 
   if (!auth.isAuthenticated) {
     return <LoginPage />;
   }
+  */
 
   const handleNewScan = () => {
     setShowModal(true);

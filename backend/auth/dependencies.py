@@ -27,56 +27,20 @@ async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
 ) -> CognitoUser:
     """
-    FastAPI dependency that verifies the JWT and returns the current user.
-
-    Usage:
-        @app.get("/api/protected")
-        async def protected_route(user: CognitoUser = Depends(get_current_user)):
-            return {"user_id": user.user_id}
+    BYPASSED: Always returns a mock user for development.
     """
-    if not credentials:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentication required. Please sign in.",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
-    token = credentials.credentials
-
-    try:
-        claims = verify_token(token)
-    except JWTError as e:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Invalid or expired token: {e}",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
-    # Extract user info from token claims
-    user_id = claims.get("sub", "")
-    email = claims.get("email", "")
-    username = claims.get("cognito:username", claims.get("username", email))
-
-    if not user_id:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token missing user identity",
-        )
-
-    return CognitoUser(user_id=user_id, email=email, username=username)
+    # Simply return a default user for all requests
+    return CognitoUser(
+        user_id="default_user",
+        email="guest@example.com",
+        username="guest"
+    )
 
 
 async def get_optional_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
 ) -> CognitoUser | None:
     """
-    Optional auth dependency — returns None instead of raising 401
-    if no token is provided (useful for endpoints that work both ways).
+    BYPASSED: Always returns the mock guest user.
     """
-    if not credentials:
-        return None
-
-    try:
-        return await get_current_user(credentials)
-    except HTTPException:
-        return None
+    return await get_current_user(credentials)
