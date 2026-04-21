@@ -13,15 +13,24 @@ const api = axios.create({
 // Automatically attaches the Cognito JWT token to every API request
 api.interceptors.request.use(
   (config) => {
-    // Get the OIDC user from sessionStorage (react-oidc-context stores it here)
-    const storageKey = `oidc.user:https://cognito-idp.us-east-1.amazonaws.com/us-east-1_qPTDgvkKe:2merv8shtv2gaj65bvui5msdjl`;
-    const oidcStorage = sessionStorage.getItem(storageKey);
-
-    if (oidcStorage) {
-      const user = JSON.parse(oidcStorage);
-      if (user?.id_token) {
-        config.headers.Authorization = `Bearer ${user.id_token}`;
+    // Search for the OIDC user token in sessionStorage (key starts with 'oidc.user:')
+    let token = null;
+    for (let i = 0; i < sessionStorage.length; i++) {
+      const key = sessionStorage.key(i);
+      if (key && key.startsWith('oidc.user:')) {
+        const oidcStorage = sessionStorage.getItem(key);
+        if (oidcStorage) {
+          const user = JSON.parse(oidcStorage);
+          if (user?.id_token) {
+            token = user.id_token;
+            break;
+          }
+        }
       }
+    }
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
 
     return config;
@@ -36,9 +45,13 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       console.warn('🔒 Unauthorized — token may be expired.');
-      // Clear stored user and reload to trigger login
-      const storageKey = `oidc.user:https://cognito-idp.us-east-1.amazonaws.com/us-east-1_qPTDgvkKe:2merv8shtv2gaj65bvui5msdjl`;
-      sessionStorage.removeItem(storageKey);
+      // Clear all stored OIDC users and reload to trigger login
+      for (let i = 0; i < sessionStorage.length; i++) {
+        const key = sessionStorage.key(i);
+        if (key && key.startsWith('oidc.user:')) {
+          sessionStorage.removeItem(key);
+        }
+      }
       window.location.reload();
     }
     return Promise.reject(error);
