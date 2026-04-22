@@ -46,6 +46,33 @@ function Infrastructure() {
       description: 'Provides event-driven messaging. Automatically triggers and delivers branded email notifications to the user the moment an accessibility scan completes.',
       color: '#FF4F8B', // AWS App Integration Pink
       details: ['Pub/Sub Messaging', 'Email Delivery', 'Event-Driven', 'Asynchronous Workloads']
+    },
+    {
+      id: 'cognito',
+      name: 'Amazon Cognito',
+      icon: '🆔',
+      role: 'Identity & Auth',
+      description: 'Manages secure user sign-up, sign-in, and access control. Distributes JWT tokens used by the backend to verify user identity for every request.',
+      color: '#745BFF',
+      details: ['User Pools', 'JWT Authentication', 'OAuth 2.0 / SAML', 'Secure Session Mgmt']
+    },
+    {
+      id: 'polly',
+      name: 'Amazon Polly',
+      icon: '🗣️',
+      role: 'AI Voice Engine',
+      description: 'Uses advanced deep learning to convert technical accessibility reports into natural-sounding speech, making the audits themselves fully accessible.',
+      color: '#D44E0E',
+      details: ['Neural TTS Engine', 'Multi-language Support', 'MP3 Audio Streaming', 'Inclusive UX']
+    },
+    {
+      id: 'cloudwatch',
+      name: 'Amazon CloudWatch',
+      icon: '📊',
+      role: 'Observability',
+      description: 'Provides real-time monitoring of system health and custom metrics, such as total violations found and scan success rates across the platform.',
+      color: '#C925D1',
+      details: ['Custom CloudWatch Metrics', 'Performance Logs', 'Alarms & Dashboard', 'Activity Tracking']
     }
   ];
 
@@ -88,13 +115,19 @@ function Infrastructure() {
         <div className="diagram-container">
           <div className="diagram-node user-node">
             <span className="node-icon">👤</span>
-            <span>Frontend (React)</span>
+            <span>User</span>
+          </div>
+          <div className="diagram-arrow">➔</div>
+          <div className="diagram-node cognito-node">
+            <span className="node-icon">🆔</span>
+            <span>Cognito (Auth)</span>
           </div>
           <div className="diagram-arrow">➔</div>
           <div className="diagram-node ec2-node">
             <span className="node-icon">🖥️</span>
             <span>EC2 Backend</span>
           </div>
+
           <div className="diagram-split">
             <div className="split-branch">
               <div className="diagram-arrow down-right">↘</div>
@@ -118,17 +151,35 @@ function Infrastructure() {
               </div>
             </div>
           </div>
-          
-          {/* New Event-Driven Flow for SNS */}
-          <div className="diagram-arrow down-long">↓</div>
-          <div className="diagram-node sns-node">
-            <span className="node-icon">✉️</span>
-            <span>Amazon SNS</span>
+
+          <div className="diagram-split secondary-split">
+             <div className="split-branch">
+              <div className="diagram-arrow down-right">↘</div>
+              <div className="diagram-node cw-node">
+                <span className="node-icon">📊</span>
+                <span>CloudWatch</span>
+              </div>
+            </div>
+            <div className="split-branch">
+              <div className="diagram-arrow down">↓</div>
+              <div className="diagram-node polly-node">
+                <span className="node-icon">🗣️</span>
+                <span>Amazon Polly</span>
+              </div>
+            </div>
+            <div className="split-branch">
+              <div className="diagram-arrow down-left">↙</div>
+              <div className="diagram-node sns-node">
+                <span className="node-icon">✉️</span>
+                <span>Amazon SNS</span>
+              </div>
+            </div>
           </div>
+          
           <div className="diagram-arrow down-short">↓</div>
           <div className="diagram-node user-email-node">
             <span className="node-icon">📧</span>
-            <span>User Inbox</span>
+            <span>User Inbox / Audio</span>
           </div>
         </div>
       </div>

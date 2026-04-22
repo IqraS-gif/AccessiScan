@@ -1,5 +1,5 @@
 .infrastructure-page {
-  margin-left: 280px;
+  margin: 0 auto;
   min-height: 100vh;
   padding: 40px;
   max-width: 1200px;
@@ -215,6 +215,10 @@
   margin-top: 10px;
 }
 
+.secondary-split {
+  margin-top: 30px;
+}
+
 .split-branch {
   display: flex;
   flex-direction: column;
@@ -231,6 +235,9 @@
 .s3-node:hover { border-color: #569A31; }
 .ai-node:hover { border-color: #F55036; }
 .sns-node:hover { border-color: #FF4F8B; }
+.cognito-node:hover { border-color: #745BFF; }
+.cw-node:hover { border-color: #C925D1; }
+.polly-node:hover { border-color: #D44E0E; }
 .user-email-node {
   background: var(--bg-surface);
   border-style: dashed;

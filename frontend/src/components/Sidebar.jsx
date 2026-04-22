@@ -93,7 +93,7 @@ function Sidebar({ onSelectScan, activeScanId, onNewScan, scanHistory, setScanHi
           </div>
         )}
 
-        {scanHistory.map((scan) => (
+        {Array.isArray(scanHistory) && scanHistory.map((scan) => (
           <div
             key={scan.scan_id}
             className={`scan-history-item ${activeScanId === scan.scan_id ? 'active' : ''}`}
