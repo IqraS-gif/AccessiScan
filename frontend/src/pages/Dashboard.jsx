@@ -1,3 +1,4 @@
+import React, { useState, useRef } from 'react';
 import { getScreenshotUrl, getPdfUrl } from '../api/client';
 import ScoreCircle from '../components/ScoreCircle';
 import PourBars from '../components/PourBars';
@@ -45,6 +46,43 @@ function Dashboard({ scanData, onNewScan }) {
     }
   };
 
+  const [audioUrl, setAudioUrl] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = React.useRef(null);
+
+  const toggleAudio = async () => {
+    if (isPlaying) {
+      audioRef.current?.pause();
+      setIsPlaying(false);
+      return;
+    }
+
+    if (audioUrl) {
+      audioRef.current.play();
+      setIsPlaying(true);
+      return;
+    }
+
+    // Fetch new audio
+    try {
+      const resp = await fetch(`${import.meta.env.VITE_API_URL}/api/scan/${scanData.scan_id}/audio`);
+      if (!resp.ok) throw new Error('Polly failed');
+      const blob = await resp.blob();
+      const url = URL.createObjectURL(blob);
+      setAudioUrl(url);
+      setIsPlaying(true);
+      
+      // Auto-play when loaded
+      const audio = new Audio(url);
+      audioRef.current = audio;
+      audio.onended = () => setIsPlaying(false);
+      audio.play();
+    } catch (err) {
+      console.error('Failed to play report:', err);
+      alert('Failed to generate audio. Make sure Polly permissions are enabled!');
+    }
+  };
+
   const handleExportPdf = () => {
     const url = getPdfUrl(scanData.scan_id);
     window.open(url, '_blank');
@@ -61,6 +99,9 @@ function Dashboard({ scanData, onNewScan }) {
           </div>
         </div>
         <div className="dashboard-actions">
+          <button className={`export-btn ${isPlaying ? 'active' : ''}`} onClick={toggleAudio}>
+            {isPlaying ? '⏸ Rendering Speech...' : '🔊 Listen to Report'}
+          </button>
           <button className="export-btn" onClick={handleExportPdf}>
             📄 Download PDF
           </button>

@@ -29,6 +29,16 @@
             ]
         },
         {
+            "Sid": "AccessiScanSNSPollyAccess",
+            "Effect": "Allow",
+            "Action": [
+                "sns:Publish",
+                "polly:SynthesizeSpeech",
+                "polly:DescribeVoices"
+            ],
+            "Resource": "*"
+        },
+        {
             "Sid": "AccessiScanCognitoAccess",
             "Effect": "Allow",
             "Action": [

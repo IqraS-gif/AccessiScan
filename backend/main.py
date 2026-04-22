@@ -256,6 +256,54 @@ async def get_pdf_report(scan_id: str, current_user: CognitoUser = Depends(get_c
     )
 
 
+from voices.polly import synthesize_speech
+
+
+@app.get("/api/scan/{scan_id}/audio")
+async def get_audio_report(scan_id: str, voice: str = "Joanna", current_user: CognitoUser = Depends(get_current_user)):
+    """Generate and return an audio report using Amazon Polly. Requires authentication."""
+    # Get scan data from cache or DynamoDB
+    scan_data = scan_cache.get(scan_id)
+    if not scan_data:
+        item = get_scan(scan_id)
+        if item:
+            scan_data = {
+                "url": item.get("URL", ""),
+                "score": item.get("Score", 0),
+                "ai_analysis": item.get("AiAnalysis", {}),
+                "violation_count": item.get("ViolationCount", 0),
+            }
+
+    if not scan_data:
+        raise HTTPException(status_code=404, detail="Scan not found")
+
+    # Construct the script for Polly
+    ai = scan_data.get("ai_analysis", {})
+    script = f"AccessiScan Accessibility Report for {scan_data['url']}. "
+    script += f"Overall Score is {scan_data['score']} out of 100. "
+    script += f"We found {scan_data.get('violation_count', 0)} accessibility issues. "
+    
+    if ai.get("overview"):
+        script += f"Overview: {ai['overview']} "
+    
+    if ai.get("human_impact"):
+        script += f"Human Impact: {ai['human_impact']} "
+
+    # Synthesize
+    audio_bytes = synthesize_speech(script, voice_id=voice)
+    
+    if not audio_bytes:
+        raise HTTPException(status_code=500, detail="Failed to generate audio via Amazon Polly")
+
+    return Response(
+        content=audio_bytes,
+        media_type="audio/mpeg",
+        headers={
+            "Content-Disposition": f'inline; filename="accessiscan-audio-{scan_id[:8]}.mp3"'
+        },
+    )
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
