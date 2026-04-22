@@ -107,11 +107,45 @@
 }
 
 .narrative-content {
+  background: transparent;
+  padding: 0;
+  border: none;
+}
+
+.narrative-content ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+}
+
+.narrative-content li {
   background: var(--bg-surface);
-  padding: 20px;
+  padding: 18px 22px;
   border-radius: var(--radius-md);
-  line-height: 1.6;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
   border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  position: relative;
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+.narrative-content li::before {
+  content: "📍";
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.narrative-content li:hover {
+  border-color: var(--primary-light);
+  transform: translateX(8px);
+  background: #ffffff;
+  box-shadow: var(--shadow-sm);
 }

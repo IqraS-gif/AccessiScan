@@ -51,7 +51,7 @@ IMPORTANT: Ensure all strings are properly escaped. Do not include literal newli
 
 {{
     "overview": "A comprehensive analysis overview (2-3 paragraphs).",
-    "human_impact": "Detailed explanation of how issues affect specific disability groups.",
+    "human_impact": "Detailed explanation of how issues affect specific disability groups, formatted as a clear markdown bulleted list.",
     "remediation_strategy": "Prioritized fix steps with markdown code blocks for the top 5 issues."
 }}
 
