@@ -4,6 +4,7 @@ import PourBars from '../components/PourBars';
 import ViolationList from '../components/ViolationList';
 import ReportSection from '../components/ReportSection';
 import MarkdownText from '../components/MarkdownText';
+import RealImpact from '../components/RealImpact';
 import './Dashboard.css';
 
 function Dashboard({ scanData, onNewScan }) {
@@ -51,25 +52,33 @@ function Dashboard({ scanData, onNewScan }) {
 
   return (
     <div className="dashboard">
-      {/* Header */}
+      {/* 1. Header (Premium HUD style) */}
       <div className="dashboard-header">
         <div className="dashboard-header-info">
           <div className="dashboard-url">{formatUrl(scanData.url)}</div>
           <div className="dashboard-date">
-            Scanned on {formatDate(scanData.created_at)} • {scanData.violation_count || scanData.violations?.length || 0} issues found
+            Accessibility Audit • {scanData.violation_count || scanData.violations?.length || 0} issues identified
           </div>
         </div>
         <div className="dashboard-actions">
           <button className="export-btn" onClick={handleExportPdf}>
-            📄 Export PDF
+            📄 Download PDF
           </button>
           <button className="export-btn" onClick={onNewScan}>
-            ⚡ New Scan
+            ⚡ New Audit
           </button>
         </div>
       </div>
 
-      {/* Score + POUR */}
+      {/* 2. Real Impact Dynamics (New Section) */}
+      {scanData.ai_analysis?.human_impact && (
+        <RealImpact 
+          impactData={scanData.ai_analysis.human_impact} 
+          score={scanData.score} 
+        />
+      )}
+
+      {/* 3. Core Metrics Section */}
       <div className="dashboard-top-section">
         <div className="score-card">
           <ScoreCircle score={scanData.score} />
@@ -79,20 +88,20 @@ function Dashboard({ scanData, onNewScan }) {
         </div>
       </div>
 
-      {/* Audit Report - Violations */}
-      <ReportSection icon="📋" title="Audit Report">
-        <ViolationList violations={scanData.violations || []} />
-      </ReportSection>
-
-      {/* AI Analysis Overview */}
+      {/* 4. Analysis Breakdown */}
       {scanData.ai_analysis?.overview && (
-        <ReportSection icon="🤖" title="Analysis Overview">
+        <ReportSection icon="🤖" title="AI Strategic Overview">
           <MarkdownText content={scanData.ai_analysis.overview} />
         </ReportSection>
       )}
 
-      {/* Visual Evidence */}
-      <ReportSection icon="📸" title="Visual Evidence">
+      {/* 5. Detailed Audit Findings */}
+      <ReportSection icon="📋" title="Technical Audit Findings">
+        <ViolationList violations={scanData.violations || []} />
+      </ReportSection>
+
+      {/* 6. Visual Evidence */}
+      <ReportSection icon="📸" title="Visual Evidence Map">
         <div className="screenshot-container">
           <img
             src={getScreenshotUrl(scanData.scan_id)}
@@ -105,16 +114,9 @@ function Dashboard({ scanData, onNewScan }) {
         </div>
       </ReportSection>
 
-      {/* Human Impact */}
-      {scanData.ai_analysis?.human_impact && (
-        <ReportSection icon="♿" title="Human Impact Dynamics">
-          <MarkdownText content={scanData.ai_analysis.human_impact} />
-        </ReportSection>
-      )}
-
-      {/* Remediation Strategy */}
+      {/* 7. Remediation Roadmap */}
       {scanData.ai_analysis?.remediation_strategy && (
-        <ReportSection icon="🔧" title="Remediation Strategy">
+        <ReportSection icon="🔧" title="Prioritized Remediation Roadmap">
           <MarkdownText content={scanData.ai_analysis.remediation_strategy} />
         </ReportSection>
       )}
