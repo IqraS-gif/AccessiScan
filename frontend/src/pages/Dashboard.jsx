@@ -46,41 +46,40 @@ function Dashboard({ scanData, onNewScan }) {
     }
   };
 
-  const [audioUrl, setAudioUrl] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = React.useRef(null);
+  const synthRef = useRef(null);
 
-  const toggleAudio = async () => {
+  const toggleAudio = () => {
     if (isPlaying) {
-      audioRef.current?.pause();
+      window.speechSynthesis.cancel();
       setIsPlaying(false);
       return;
     }
 
-    if (audioUrl) {
-      audioRef.current.play();
-      setIsPlaying(true);
-      return;
-    }
+    // Construct the script
+    const ai = scanData.ai_analysis || {};
+    let script = `AccessiScan Accessibility Report for ${formatUrl(scanData.url)}. `;
+    script += `Overall Score is ${scanData.score} out of 100. `;
+    script += `We found ${scanData.violation_count || 0} accessibility issues. `;
+    
+    if (ai.overview) script += `Overview: ${ai.overview.replace(/[#*`]/g, '')} `;
+    if (ai.human_impact) script += `Human Impact: ${ai.human_impact.replace(/[#*`]/g, '')} `;
 
-    // Fetch new audio
-    try {
-      const resp = await fetch(`${import.meta.env.VITE_API_URL}/api/scan/${scanData.scan_id}/audio`);
-      if (!resp.ok) throw new Error('Polly failed');
-      const blob = await resp.blob();
-      const url = URL.createObjectURL(blob);
-      setAudioUrl(url);
-      setIsPlaying(true);
-      
-      // Auto-play when loaded
-      const audio = new Audio(url);
-      audioRef.current = audio;
-      audio.onended = () => setIsPlaying(false);
-      audio.play();
-    } catch (err) {
-      console.error('Failed to play report:', err);
-      alert('Failed to generate audio. Make sure Polly permissions are enabled!');
-    }
+    // Use Browser Native Synthesis
+    const utterance = new SpeechSynthesisUtterance(script);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    
+    // Choose a nice voice if available
+    const voices = window.speechSynthesis.getVoices();
+    const preferredVoice = voices.find(v => v.name.includes('Google') || v.name.includes('Female') || v.lang === 'en-US');
+    if (preferredVoice) utterance.voice = preferredVoice;
+
+    utterance.onend = () => setIsPlaying(false);
+    utterance.onerror = () => setIsPlaying(false);
+
+    window.speechSynthesis.speak(utterance);
+    setIsPlaying(true);
   };
 
   const handleExportPdf = () => {
