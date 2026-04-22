@@ -29,12 +29,13 @@
             ]
         },
         {
-            "Sid": "AccessiScanSNSPollyAccess",
+            "Sid": "AccessiScanAdvancedServicesAccess",
             "Effect": "Allow",
             "Action": [
                 "sns:Publish",
                 "polly:SynthesizeSpeech",
-                "polly:DescribeVoices"
+                "polly:DescribeVoices",
+                "cloudwatch:PutMetricData"
             ],
             "Resource": "*"
         },

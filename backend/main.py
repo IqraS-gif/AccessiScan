@@ -137,6 +137,9 @@ async def create_scan(request: ScanRequest, current_user: CognitoUser = Depends(
     # 8. Send SNS Notification
     send_scan_notification(result)
 
+    # 9. Report to CloudWatch Dashboard
+    report_scan_metrics(result)
+
     return result
 
 
