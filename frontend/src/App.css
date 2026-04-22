@@ -7,6 +7,14 @@
 .app-main {
   flex: 1;
   min-height: 100vh;
+  padding-left: 280px; /* Space for fixed sidebar */
+  transition: padding 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .app-main {
+    padding-left: 0;
+  }
 }
 
 /* Global error toast */
