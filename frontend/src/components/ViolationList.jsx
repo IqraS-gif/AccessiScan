@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import TerminalCode from './TerminalCode';
 import './ViolationList.css';
 
 function ViolationList({ violations = [] }) {
@@ -111,8 +112,8 @@ function ViolationList({ violations = [] }) {
                   <div className="violation-detail-section">
                     <div className="violation-detail-label">Affected Elements</div>
                     {v.nodes.slice(0, 5).map((node, ni) => (
-                      <div key={ni} style={{ marginBottom: '8px' }}>
-                        <div className="violation-code-snippet">{node.html}</div>
+                      <div key={ni} style={{ marginBottom: '16px' }}>
+                        <TerminalCode code={node.html} title="element-source.html" />
                         {node.failure_summary && (
                           <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
                             {node.failure_summary}

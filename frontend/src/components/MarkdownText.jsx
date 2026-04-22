@@ -1,3 +1,4 @@
+import TerminalCode from './TerminalCode';
 import './MarkdownText.css';
 
 /**
@@ -22,10 +23,11 @@ function MarkdownText({ content }) {
         const displayLang = (language && !language.includes(' ') && language.length < 20) ? language : '';
 
         return (
-          <div className="md-code-block" key={index}>
-            {displayLang && <div className="md-code-lang">{displayLang}</div>}
-            <pre><code>{code.trim()}</code></pre>
-          </div>
+          <TerminalCode 
+            key={index}
+            code={code.trim()}
+            title={displayLang ? `audit-fix.${displayLang}` : "remediation-script"} 
+          />
         );
       }
 
