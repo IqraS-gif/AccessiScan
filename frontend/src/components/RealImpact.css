@@ -1,12 +1,12 @@
 .real-impact-card {
-  background: var(--card-bg);
-  border-radius: 24px;
-  padding: 2rem;
-  margin-bottom: 2.5rem;
-  border: 1px solid var(--border-glass);
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  margin-bottom: 32px;
+  border: 1px solid var(--border-subtle);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-sm);
 }
 
 .real-impact-card::before {
@@ -18,88 +18,88 @@
   height: 4px;
 }
 
-.real-impact-card.extreme::before { background: linear-gradient(90deg, #ff4d4d, #f97316); }
-.real-impact-card.significant::before { background: linear-gradient(90deg, #f97316, #fbbf24); }
-.real-impact-card.low::before { background: linear-gradient(90deg, #10b981, #3b82f6); }
+.real-impact-card.extreme::before { background-color: var(--critical); }
+.real-impact-card.significant::before { background-color: var(--serious); }
+.real-impact-card.low::before { background-color: var(--score-good); }
 
 .real-impact-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.8rem;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 0.6rem 1.2rem;
+  gap: 12px;
+  background: var(--bg-surface);
+  padding: 8px 16px;
   border-radius: 50px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 700;
-  color: var(--text-main);
-  border: 1px solid var(--border-glass);
-  margin-bottom: 2rem;
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
+  margin-bottom: 24px;
 }
 
 .impact-pulse {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: #ff4d4d;
+  background: var(--critical);
   animation: pulse 1.5s infinite;
 }
 
 @keyframes pulse {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 77, 77, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); }
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(214, 48, 49, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(214, 48, 49, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(214, 48, 49, 0); }
 }
 
 .impact-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2.5rem;
+  gap: 16px;
+  margin-bottom: 32px;
 }
 
 .impact-item {
-  background: rgba(0, 0, 0, 0.2);
-  padding: 1.5rem;
-  border-radius: 16px;
+  background: var(--bg-surface);
+  padding: 20px;
+  border-radius: var(--radius-md);
   text-align: center;
-  border: 1px solid var(--border-glass);
-  transition: all 0.3s ease;
+  border: 1px solid var(--border-subtle);
+  transition: all var(--transition-normal);
 }
 
 .impact-item:hover {
-  background: rgba(255, 255, 255, 0.03);
-  transform: translateY(-5px);
-  border-color: var(--accent-neon);
+  border-color: var(--primary-light);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-sm);
 }
 
 .impact-icon {
   font-size: 2.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 12px;
 }
 
 .impact-label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-secondary);
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-bottom: 0.4rem;
+  margin-bottom: 4px;
 }
 
 .impact-status {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: var(--text-main);
+  color: var(--primary);
 }
 
 .impact-narrative h3 {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  margin-bottom: 1.2rem;
-  color: var(--text-main);
+  margin-bottom: 16px;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
 .impact-narrative h3::before {
@@ -107,10 +107,11 @@
 }
 
 .narrative-content {
-  background: rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  border-radius: 12px;
-  line-height: 1.7;
+  background: var(--bg-surface);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  line-height: 1.6;
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  border: 1px solid var(--border-subtle);
 }
