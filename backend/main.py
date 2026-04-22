@@ -42,12 +42,11 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS
-frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+# CORS - Universal access for demo (no more IP hunting!)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[frontend_url, "http://localhost:5173", "http://localhost:3000"],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
